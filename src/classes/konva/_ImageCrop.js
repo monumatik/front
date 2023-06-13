@@ -188,7 +188,7 @@ export default class _ImageCrop extends Konva.Image {
       stroke: this.stroke(),
       strokeWidth: this.strokeWidth(),
       image: this.image(),
-      opacity: 0.5,
+      opacity: 0.7,
       draggable: false
     });
 
@@ -199,7 +199,7 @@ export default class _ImageCrop extends Konva.Image {
       height: this._cropElement.height(),
     });
 
-    layer.add(this.cropImage);
+    //layer.add(this.cropImage);
     // this.cropImageTransformer = new Konva.Transformer({
     //   borderDash: [5, 5],
     //   anchorSize: 21,
@@ -280,7 +280,7 @@ export default class _ImageCrop extends Konva.Image {
     context.beginPath();
     context.rect(0, 0, width, height);
     context.closePath();
-    context.clip();
+    //context.clip();
     if (this.hasFill() || this.hasStroke()) {
       context.fillStrokeShape(this);
     }

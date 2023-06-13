@@ -21,10 +21,11 @@ class App extends React.PureComponent{
     this.creator = new Creator(
       json
     );
-    console.log(this.creator.getElementsList());
-    this.setState({
-      elements: this.creator.getElementsList()
-    })
+    setTimeout(() => {
+      this.setState({
+        elements: this.creator?.getElementsList()
+      });
+    }, 1000);
   }
 
   onClickImageLoad = async (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -41,17 +42,15 @@ class App extends React.PureComponent{
     }
   }
 
-  updateImageCallback = (imageSrc: string): void => {
-    this.state.elements.forEach((element: any) => {
-      if(element.id == this.state.overrideElementId){
-        element.src = imageSrc;
-      }
-    });
-    this.forceUpdate();
-    this.creator?.updateElementImage(imageSrc, this.state.overrideElementId);
-    this.setState({
-      loadButton: false
-    });
+  updateImageCallback = async (imageSrc: string) => {
+    console.log(imageSrc)
+    await this.creator?.updateElementImage(imageSrc, this.state.overrideElementId);
+    setTimeout(() => {
+      this.setState({
+        elements: this.creator?.getElementsList(),
+        loadButton: false
+      });
+    }, 0);
   }
 
   render(){
@@ -60,9 +59,14 @@ class App extends React.PureComponent{
         <div>
           { 
             this.state.elements.map((element: any) => {
-              return element.type == "Image" ? (
+              return element.type == "Image" && element.replaceable ? (
                 <div key={`C${element.id}`}>
-                  <img key={`${element.type}${element.id}`} src={element.src}></img>
+                  <img
+                    style={{maxHeight: "100px", maxWidth: "100px", objectFit: 'contain'}}
+                    key={`${element.type}${element.id}`} 
+                    // id={element.id}
+                    
+                    src={element.thumbSrc}></img>
                   <input
                     data-element-id={element.id}
                     key={`${element.id}`}
@@ -78,6 +82,11 @@ class App extends React.PureComponent{
           {
             this.state.loadButton && 
             <ImageCrop
+              closeModal={() => {
+                this.setState({
+                  loadButton: false, overrideElementId: undefined
+                })
+              }}
               elementId={this.state.overrideElementId}
               updateImageCallback={this.updateImageCallback}
               layer={this.creator?.getLayer()} 

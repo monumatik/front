@@ -18,10 +18,16 @@ namespace MyKonva {
             this.draggable(false);
         }
 
-        load = (): void => {
+        public load = (): void => {
             let imageObj = new HTMLImage();
-            imageObj.src = this.getAttr('src');
-            this.image(imageObj);
+            imageObj.onload = () => {
+                if(this.getAttr('clientSrc'))
+                    this.image(imageObj);
+                else
+                    this.fillPatternImage(imageObj);
+            }
+
+            imageObj.src = this.getAttr('clientSrc') ? this.getAttr('clientSrc') : this.getAttr('src'); 
         }
     }
 
@@ -40,10 +46,10 @@ namespace MyKonva {
 
             var a = undefined;
             
-            if(className !== "Image"){
-                a = Global_1.Konva[className];
-            }else{
+            if(className == "Image"){
                 a = Image;
+            }else{
+                a = Global_1.Konva[className];
             }
 
             no = new a(obj.attrs);

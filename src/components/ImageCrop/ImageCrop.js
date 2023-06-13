@@ -21,7 +21,7 @@ export default class ImageCrop extends React.Component {
 
     this.ids = [];
     this.ids.containerId = 'modal';
-    this.ids.thumbnailId = 'img-modal';
+    this.ids.thumbnailId = this.props.elementId;
 
     this.projectLayerSize = null;
     this.originImage = {};
@@ -33,12 +33,12 @@ export default class ImageCrop extends React.Component {
 
     width = this.props.layer.width();
     height = this.props.layer.height();
-
-    let result = Helper.getChildByType(this.props.layer, MyKonva.Image);
+    let group = this.props.layer.findOne(`#${this.props.elementId}`);
+    let result = Helper.getChildByType(group, MyKonva.Image);
     if (result) {
       return {
-        width: Math.abs(result.width()),
-        height: Math.abs(result.height())
+        width: Math.abs(result.width() * result.scaleX()),
+        height: Math.abs(result.height() * result.scaleY())
       }
     }
   }
@@ -279,7 +279,9 @@ export default class ImageCrop extends React.Component {
             { cropSizeMessage }
         </div>
         <div className='buttonContainer'>
-            <button type="button" id={this.ids.modalCloseId} className="btn btn-default"
+            <button type="button" 
+              id={this.ids.modalCloseId} 
+              className="btn btn-default"
               onClick={this.handleBtnCloseClick}
             >
               Zamknij

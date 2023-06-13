@@ -1,7 +1,7 @@
 class Api {
     public static getProjectData = async (): Promise<JSON> => {
         let json = async (): Promise<JSON> => { 
-            let response = await fetch(`https://mocki.io/v1/e0cfdde9-e11c-4a20-b289-b22444101621`);
+            let response = await fetch(`https://mocki.io/v1/bb05a01c-4842-4047-8865-39b8ec3a271a`);
             let json = await response.json();
             return json;
         }

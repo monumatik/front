@@ -49,11 +49,13 @@ class Creator {
                 children.forEach((group) => {
                     let children = group.getChildren((node: any) => {
                         return node.getClassName() !== 'Transformer';
-                    })
+                    });
                     childrenSortByZIndex[group.zIndex()] = {
                         type: children[0].getClassName(),
                         id: group.id(),
-                        src: children[0].image ? children[0].image().src : ''
+                        src: children[0].getAttr('src'),
+                        thumbSrc: children[0].getAttr('src') ? children[0].toDataURL() : '',
+                        replaceable: children[0].getAttr('clientPhoto')
                     };
                 });
             }
@@ -68,15 +70,12 @@ class Creator {
     public async updateElementImage(imageSrc: string, elementId: string){
         let group: any = this.stage.findOne(`#${elementId}`);
         let image = group.findOne('Image');
-        let newImageScale = await this.getNewImageScale(imageSrc, image);
-        image.setAttr('src', imageSrc);
-        image.scaleX(newImageScale);
-        image.scaleY(newImageScale);
+        image.setAttr('clientSrc', imageSrc);
         image.load();
+        image.draw();
     }
 
     private getNewImageScale(newImageSrc: string, oldImage: Konva.Image){
-        ;
         return new Promise((resolve, reject) => {
             let newImageObj: HTMLImageElement = new Image();
             newImageObj.onload = (event) => {
